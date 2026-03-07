@@ -2,16 +2,33 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "default",
-            "description": "Default settings for my cmake project",
-            "hidden": false,
+            "name": "base",
+            "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${workspaceFolder}/build",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug Build",
+            "inherits": "base",
+            "binaryDir": "${sourceDir}/build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/debug/install"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release Build",
+            "inherits": "base",
+            "binaryDir": "${sourceDir}/build/release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/release/install"
             }
         }
     ]

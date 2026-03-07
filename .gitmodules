@@ -1,0 +1,24 @@
+[submodule "Engine/thirdparty/glfw"]
+	path = Engine/thirdparty/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "Engine/thirdparty/tinyobjloader"]
+	path = Engine/thirdparty/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader.git
+[submodule "Engine/thirdparty/tinygltf"]
+	path = Engine/thirdparty/tinygltf
+	url = https://github.com/syoyo/tinygltf.git
+[submodule "Engine/thirdparty/openal_soft"]
+	path = Engine/thirdparty/openal_soft
+	url = https://github.com/t0my1z/openal-soft.git
+[submodule "Engine/thirdparty/spdlog"]
+	path = Engine/thirdparty/spdlog
+	url = https://github.com/t0my1z/spdlog.git
+[submodule "Engine/thirdparty/imgui"]
+	path = Engine/thirdparty/imgui
+	url = https://github.com/t0my1z/imgui.git
+[submodule "Engine/thirdparty/stb"]
+	path = Engine/thirdparty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "Engine/thirdparty/nlohmann_json"]
+	path = Engine/thirdparty/nlohmann_json
+	url = https://github.com/nlohmann/json.git
