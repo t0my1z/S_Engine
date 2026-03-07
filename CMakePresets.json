@@ -1,0 +1,18 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "description": "Default settings for my cmake project",
+            "hidden": false,
+            "generator": "Ninja",
+            "binaryDir": "${workspaceFolder}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        }
+    ]
+}
