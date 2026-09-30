@@ -1,10 +1,17 @@
 find_package(Vulkan REQUIRED)
-add_subdirectory(thirdparty)
+
+add_subdirectory(thirdparty EXCLUDE_FROM_ALL)
 
 add_library(SEngine)
 
-file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS src/*.cpp)
-file(GLOB_RECURSE ENGINE_HEADERS CONFIGURE_DEPENDS include/*.h)
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
+    src/*.cpp
+    src/*.c
+)
+file(GLOB_RECURSE ENGINE_HEADERS CONFIGURE_DEPENDS 
+    include/*.h
+    include?*.hpp
+)
 
 target_sources(SEngine 
     PRIVATE ${ENGINE_SOURCES}
@@ -20,6 +27,12 @@ target_include_directories(SEngine
         ${Vulkan_INCLUDE_DIRS}
 )
 
+target_compile_definitions(SEngine PUBLIC 
+    VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1 
+    VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1 
+    VULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS=1
+)
+
 target_link_libraries(SEngine
     PUBLIC
         Vulkan::Vulkan #also gives glm
@@ -28,8 +41,8 @@ target_link_libraries(SEngine
         tinygltf
         nlohmann_json
         stb
-        OpenAL
-        spdlog
+        OpenAL::OpenAL
+        spdlog::spdlog
         imgui
 )
 
@@ -42,3 +55,6 @@ install(TARGETS SEngine
     LIBRARY DESTINATION lib
     FILE_SET HEADERS DESTINATION include
 )
+
+include(CompileShaders)
+compile_project_shaders(SEngine)
