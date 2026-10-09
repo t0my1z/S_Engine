@@ -31,5 +31,13 @@
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/release/install"
             }
         }
+    ],
+    "buildPresets": [
+        {
+            "name": "Debug",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "debug"
+        }
     ]
 }

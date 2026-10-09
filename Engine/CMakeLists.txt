@@ -58,3 +58,6 @@ install(TARGETS SEngine
 
 include(CompileShaders)
 compile_project_shaders(SEngine)
+
+include(InstallResources)
+install_resources(SEngine)

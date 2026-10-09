@@ -9,6 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include <stb_image.h>
+
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
@@ -43,6 +45,13 @@ struct Vertex
     }
 };
 
+struct UniformBufferObject
+{
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
+};
+
 class HelloTriangleApplication 
 {
 public:
@@ -75,19 +84,31 @@ private:
     vk::PresentModeKHR ChooseSwapPresentMode(std::vector<vk::PresentModeKHR> const &AvailablePresentModes);
 
     void CreateImageViews();
+    std::pair<vk::raii::Image, vk::raii::DeviceMemory> CreateImage(uint32_t width, uint32_t height,
+        vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties);
+    void TransitionImageLayout(vk::raii::CommandBuffer &commandBuffer, const vk::raii::Image &image, vk::ImageLayout oldLayout, vk::ImageLayout newLayout);
+    void CopyBufferToImage(vk::raii::CommandBuffer &commandBuffer, const vk::raii::Buffer &buffer, vk::raii::Image &image, uint32_t width, uint32_t height);
+    vk::raii::CommandBuffer BeginSingleTimeCommands();
+    void EndSingleTimeCommands(vk::raii::CommandBuffer &&commandBuffer);
 
+    void CreateDescriptorSetLayout();
     void CreateGraphicsPipeline();
     [[nodiscard]] vk::raii::ShaderModule CreateShaderModule(const std::vector<char>& Code) const;
 
     void CreateCommandPool();
-    void CreateBuffer(vk::DeviceSize Size, vk::BufferUsageFlags Usage,
-        vk::MemoryPropertyFlags Properties, vk::raii::Buffer& Buffer,
-        vk::raii::DeviceMemory& BufferMemory);
+    void CreateTextureImage();
+
+    std::pair<vk::raii::Buffer, vk::raii::DeviceMemory> CreateBuffer(vk::DeviceSize Size, vk::BufferUsageFlags Usage,
+        vk::MemoryPropertyFlags Properties);
     void CreateVertexBuffer();
     void CopyBuffer(vk::raii::Buffer &srcBuffer, vk::raii::Buffer &dstBuffer, vk::DeviceSize size);
     void CreateIndexBuffer();
+    void CreateUniformBuffers();
     uint32_t FindMemoryType(uint32_t TypeFilter, vk::MemoryPropertyFlags Properties);
     void CreateCommandBuffers();
+
+    void CreateDescriptorPool();
+    void CreateDescriptorSets();
 
     void RecordCommandBuffer(uint32_t ImageIndex);
     void TransitionImageLayout(uint32_t imageIndex,
@@ -101,6 +122,8 @@ private:
     void CreateSyncObjects();
 
     void DrawFrame();
+
+    void UpdateUniformBuffer(uint32_t Frame);
 
     static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(
         vk::DebugUtilsMessageSeverityFlagBitsEXT Severity,
@@ -130,6 +153,7 @@ private:
 	vk::Extent2D                            m_swap_chain_extent;
 	std::vector<vk::raii::ImageView>        m_swap_chain_image_views;
     
+    vk::raii::DescriptorSetLayout           m_descriptor_set_layout = nullptr;
     vk::raii::PipelineLayout                m_pipeline_layout = nullptr;
     vk::raii::Pipeline                      m_graphics_pipeline = nullptr;
 
@@ -146,6 +170,16 @@ private:
     vk::raii::DeviceMemory                  m_vertex_buffer_memory = nullptr;
     vk::raii::Buffer                        m_index_buffer = nullptr;
     vk::raii::DeviceMemory                  m_index_buffer_memory = nullptr;
+
+    std::vector<vk::raii::Buffer>           m_uniform_buffers;
+    std::vector<vk::raii::DeviceMemory>     m_uniform_buffers_memory;
+    std::vector<void *>                     m_uniform_buffers_mapped;
+
+    vk::raii::DescriptorPool                m_descriptor_pool = nullptr;
+    std::vector<vk::raii::DescriptorSet>    m_descriptor_sets;
+
+    vk::raii::Image                         m_texture_image         = nullptr;
+    vk::raii::DeviceMemory                  m_texture_image_memory  = nullptr;
 
     const std::vector<Vertex>               m_vertices = {
                                                 {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},

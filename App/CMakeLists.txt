@@ -23,3 +23,6 @@ install(TARGETS SEngineApp
 
 include(CompileShaders)
 compile_project_shaders(SEngineApp)
+
+include(InstallResources)
+install_resources(SEngineApp)
